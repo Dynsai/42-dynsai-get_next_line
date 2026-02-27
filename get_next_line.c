@@ -6,7 +6,7 @@
 /*   By: parenas- <parenas-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 13:07:45 by parenas-          #+#    #+#             */
-/*   Updated: 2026/02/24 12:56:36 by parenas-         ###   ########.fr       */
+/*   Updated: 2026/02/27 17:49:21 by parenas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,62 +18,50 @@ char	*_set_line(char *line_buffer);
 size_t	ft_strlen(const char *s);
 char	*free_ptr(char	**ptr_to_free);
 
-char	*get_next_line(int fd)
+char *get_next_line(int fd)
 {
-	static char	*left_c;
-	char		*read_buffer;
-	char		*to_cut_buffer;
-	char		*new_left_c;
+    static char *left_c;
+    char *read_buffer;
+    char *line;
+    char *new_left;
 
-	left_c = NULL;
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	read_buffer = malloc(BUFFER_SIZE + 1);
-	if (!read_buffer)
-		return (NULL);
-	to_cut_buffer = _fill_line_buffer(fd, left_c, read_buffer);
-	free(read_buffer);
-	if (!to_cut_buffer)
-		return (free_ptr(&left_c));
-	new_left_c = _set_line(to_cut_buffer);
-	if (!new_left_c)
-	{
-		left_c = NULL;
-		if (to_cut_buffer[0] == '\0')
-			return (free_ptr(&to_cut_buffer));
-		return (to_cut_buffer);
-	}
-	left_c = new_left_c;
-	return (to_cut_buffer);
+    if (fd < 0 || BUFFER_SIZE <= 0)
+        return NULL;
+    read_buffer = malloc(BUFFER_SIZE + 1);
+    if (!read_buffer)
+        return NULL;
+    left_c = _fill_line_buffer(fd, left_c, read_buffer);
+    free(read_buffer);
+    if (!left_c)
+        return NULL;
+    new_left = _set_line(left_c);
+    line = left_c;
+    left_c = new_left;
+    return line;
 }
 
-char	*_fill_line_buffer(int fd, char *left_c, char *buffer)
+char *_fill_line_buffer(int fd, char *left_c, char *buffer)
 {
-	char	*tmp_buffer;
-	ssize_t	b_read;
+    char *tmp_buffer;
+    ssize_t b_read;
 
-	b_read = 1;
-	while (b_read > 0)
-	{
-		b_read = read(fd, buffer, BUFFER_SIZE);
-		if (b_read == -1)
-		{
-			free(left_c);
-			return (NULL);
-		}
-		else if (b_read == 0)
-			break ;
-		buffer[b_read] = 0;
-		if (!left_c)
-			left_c = ft_strdup("");
-		tmp_buffer = left_c;
-		left_c = ft_strjoin(tmp_buffer, buffer);
-		free(tmp_buffer);
-		tmp_buffer = NULL;
-		if (ft_strchr(left_c, '\n'))
-			break ;
-	}
-	return (left_c);
+    if (!left_c)
+        left_c = ft_strdup("");
+    while (!ft_strchr(left_c, '\n'))
+    {
+        b_read = read(fd, buffer, BUFFER_SIZE);
+        if (b_read == -1)
+			return(free_ptr(&left_c));
+        if (b_read == 0)
+            break;
+        buffer[b_read] = '\0';
+        tmp_buffer = left_c;
+        left_c = ft_strjoin(tmp_buffer, buffer);
+        free(tmp_buffer);
+    }
+    if (left_c[0] == '\0')
+        return(free_ptr(&left_c));
+    return left_c;
 }
 
 char	*_set_line(char *line_buffer)
@@ -105,10 +93,7 @@ size_t	ft_strlen(const char *s)
 
 char	*free_ptr(char	**ptr_to_free)
 {
-	if (*ptr_to_free)
-	{
-		free(*ptr_to_free);
-		*ptr_to_free = NULL;
-	}
+	free(*ptr_to_free);
+	*ptr_to_free = NULL;
 	return (NULL);
 }

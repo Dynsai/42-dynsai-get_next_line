@@ -1,0 +1,31 @@
+1 Hello123! This is line #1
+2 @@@$$$%%%^^^123abc
+3 456def789GHI
+
+5 The quick brown fox jumps 5 times!
+6 12345 !@#$% ^&*() abc
+
+8 Line with mixed content: 1a2b3c
+9 $$$$$$$$########
+10 987ZYX654
+11 Another line with symbols: *&^%$#@!
+
+13 Short
+14 Line14_With_Underscores_and_123
+
+16 A very very long line that goes on and on 1234567890 !@#$%^&*()_+ 
+17 Mid-length line with lettersABC and numbers123
+
+19 19th line, mixture: !@#Line123
+20 Simple20
+
+22 SomeSymbols$%^&*Line22
+23 Empty follows:
+
+
+
+
+
+
+30 Almost Last line: The end is near! 12345
+
